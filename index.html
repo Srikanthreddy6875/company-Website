@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNova Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background: #f4f7fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            color: white;
+            height: 50PX; /* Fixed height */
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 0.9rem; /* Fits within 18px */
+            font-weight: 700;
+            letter-spacing: 1px;
+            line-height: 18px;
+        }
+
+        .hamburger {
+            font-size: 1.5rem; /* Fits within 18px */
+            cursor: pointer;
+            line-height: 22px;
+            color: white;
+        }
+
+        .nav-links {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0px; /* Starts below header */
+            right: 0;
+            width: 250px; /* Fixed width for side menu */
+            height: calc(100vh); /* Full height minus header */
+            background: #2c3e50;
+            flex-direction: column; /* Vertical layout */
+            padding: 1rem;
+            transform: translateX(100%); /* Off-screen to the right */
+            transition: transform 0.3s ease-in-out;
+            z-index: 999;
+        }
+
+        .nav-links.active {
+            display: flex; /* Show when active */
+            transform: translateX(0); /* Slide in from right */
+        }
+
+        .nav-links li {
+            margin: 1rem 0;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s, background 0.3s;
+            font-weight: 500;
+            font-size: 1rem; /* Larger for readability in menu */
+            display: block;
+        }
+
+        .nav-links li a:hover {
+            color: #3498db;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://cdn.pixabay.com/photo/2017/01/14/10/56/people-1979261_1280.jpg');
+            background-size: cover;
+            background-position: top;
+            color: white;
+            text-align: center;
+            padding: 180px 20px;
+            margin-top: 18px; /* Matches header height */
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: background 0.3s, transform 0.3s;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        section {
+            padding: 100px 20px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #2c3e50;
+            font-size: 2.8rem;
+            font-weight: 700;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        h2.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h2::after {
+            content: '';
+            width: 60px;
+            height: 4px;
+            background: #3498db;
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #ffffff, #eef2f5);
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .team-item img {
+            width: 170px;
+            height: 180px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 4px solid #3498db;
+        }
+
+        .testimonial-item {
+            font-style: italic;
+            position: relative;
+            quotes: "“" "”";
+        }
+
+        .testimonial-item::before {
+            content: open-quote;
+            font-size: 2.5rem;
+            color: #3498db;
+            position: absolute;
+            top: -15px;
+            left: 15px;
+        }
+
+        .blog-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .contact form {
+            display: grid;
+            gap: 25px;
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        input, textarea {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: border-color 0.3s;
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        footer {
+            background: linear-gradient(135deg, #2c3e50, #1a252f);
+            color: white;
+            padding: 3rem 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            max-width: 1300px;
+            margin: 0 auto 2rem;
+        }
+
+        .social-links a {
+            color: white;
+            margin-right: 1.5rem;
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .social-links a:hover {
+            color: #3498db;
+        }
+
+        /* New Section Styles */
+        .mission, .achievements, .partners, .careers {
+            background: #fff;
+            padding: 100px 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 20px;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+        }
+
+        .partner-logos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .partner-logos img {
+            max-width: 150px;
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+
+        .partner-logos img:hover {
+            filter: grayscale(0%);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 120px 15px;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            section {
+                padding: 60px 15px;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">TechNova Solutions</div>
+        <div class="hamburger">☰</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#mission">Mission</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#achievements">Achievements</a></li>
+            <li><a href="#team">Team</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#partners">Partners</a></li>
+            <li><a href="#blog">Blog</a></li>
+            <li><a href="#careers">Careers</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </header>
+
+    <section class="hero">
+        <h1>Innovative Technology Solutions</h1>
+        <p>Transforming your business with cutting-edge digital solutions since 2013</p>
+        <a href="#contact" class="btn">Get in Touch</a>
+    </section>
+
+    <section id="about" class="about">
+        <h2>About Us</h2>
+        <p>TechNova Solutions is a global leader in digital transformation, serving clients in over 50 countries. With a team of 100+ experts, we deliver innovative solutions that drive business success. Our mission is to empower organizations through technology.</p>
+    </section>
+
+    <section id="mission" class="mission">
+        <h2>Our Mission</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Vision</h3>
+                <p>To be the world’s leading innovator in technology solutions, shaping the future of industries.</p>
+            </div>
+            <div class="card">
+                <h3>Mission</h3>
+                <p>Empower businesses with transformative digital tools to achieve unparalleled growth and efficiency.</p>
+            </div>
+            <div class="card">
+                <h3>Values</h3>
+                <p>Innovation, integrity, and excellence guide everything we do.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <h2>Our Services</h2>
+        <div class="grid">
+            <div class="card service-item">
+                <h3>Web Development</h3>
+                <p>Custom responsive websites with modern frameworks</p>
+            </div>
+            <div class="card service-item">
+                <h3>Mobile Apps</h3>
+                <p>Native and cross-platform app development</p>
+            </div>
+            <div class="card service-item">
+                <h3>Digital Marketing</h3>
+                <p>Comprehensive SEO, PPC, and content strategies</p>
+            </div>
+            <div class="card service-item">
+                <h3>Cloud Solutions</h3>
+                <p>AWS, Azure, and Google Cloud implementations</p>
+            </div>
+            <div class="card service-item">
+                <h3>AI Solutions</h3>
+                <p>Machine learning and automation services</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="achievements" class="achievements">
+        <h2>Our Achievements</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <h3>50+</h3>
+                <p>Countries Served</p>
+            </div>
+            <div class="stat-item">
+                <h3>100+</h3>
+                <p>Expert Team Members</p>
+            </div>
+            <div class="stat-item">
+                <h3>500+</h3>
+                <p>Projects Delivered</p>
+            </div>
+            <div class="stat-item">
+                <h3>12</h3>
+                <p>Industry Awards</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="team" class="team">
+        <h2>Our Team</h2>
+        <div class="grid">
+            <div class="card team-item">
+                <img src="./1.jpg" alt="Madhan">
+                <h3>Madhan ParthiReddy</h3>
+                <p>CEO & Founder</p>
+            </div>
+            <div class="card team-item">
+                <img src="https://media.istockphoto.com/id/1369199360/photo/portrait-of-a-handsome-young-businessman-working-in-office.jpg?s=1024x1024&w=is&k=20&c=-xjY_sj5IU0ibPJn3t8Qf63XyBlunViU3oeT2RwJ3RE=" alt="Jane Smith">
+                <h3>Jane Smith</h3>
+                <p>Lead Developer</p>
+            </div>
+            <div class="card team-item">
+                <img src="https://media.istockphoto.com/id/2105399620/photo/smiling-businessman-using-laptop-in-modern-office.jpg?s=1024x1024&w=is&k=20&c=-atu1b-k1YZjOziSrpGeY6riK3GHU523W6fILzHXm58=" alt="Mike Johnson">
+                <h3>Mike Johnson</h3>
+                <p>Marketing Director</p>
+            </div>
+            <div class="card team-item">
+                <img src="https://source.unsplash.com/random/150x150?person4" alt="Sarah Lee">
+                <h3>Sarah Lee</h3>
+                <p>Cloud Architect</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <h2>What Our Clients Say</h2>
+        <div class="grid">
+            <div class="card testimonial-item">
+                <p>"TechNova transformed our business with their innovative solutions."</p>
+                <p><strong>- Alex Brown, CEO of FutureCorp</strong></p>
+            </div>
+            <div class="card testimonial-item">
+                <p>"Their team delivered our project ahead of schedule with amazing quality."</p>
+                <p><strong>- Maria Garcia, CTO of InnovateTech</strong></p>
+            </div>
+            <div class="card testimonial-item">
+                <p>"Best digital marketing results we've ever seen!"</p>
+                <p><strong>- Peter Chen, Marketing Head at GrowEasy</strong></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="partners" class="partners">
+        <h2>Our Partners</h2>
+        <div class="partner-logos">
+            <img src="https://source.unsplash.com/random/150x50?logo1" alt="Partner 1">
+            <img src="https://source.unsplash.com/random/150x50?logo2" alt="Partner 2">
+            <img src="https://source.unsplash.com/random/150x50?logo3" alt="Partner 3">
+            <img src="https://source.unsplash.com/random/150x50?logo4" alt="Partner 4">
+        </div>
+    </section>
+
+    <section id="blog" class="blog">
+        <h2>Latest Blog Posts</h2>
+        <div class="grid">
+            <div class="card blog-item">
+                <img src="https://source.unsplash.com/random/300x150?tech" alt="Blog 1">
+                <h3>The Future of AI in Business</h3>
+                <p>Exploring how AI is reshaping industries in 2025...</p>
+                <a href="#" class="btn">Read More</a>
+            </div>
+            <div class="card blog-item">
+                <img src="https://source.unsplash.com/random/300x150?cloud" alt="Blog 2">
+                <h3>Cloud Migration Strategies</h3>
+                <p>Top tips for a seamless transition to the cloud...</p>
+                <a href="#" class="btn">Read More</a>
+            </div>
+            <div class="card blog-item">
+                <img src="https://source.unsplash.com/random/300x150?mobile" alt="Blog 3">
+                <h3>Mobile App Trends 2025</h3>
+                <p>What to expect in mobile technology this year...</p>
+                <a href="#" class="btn">Read More</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="careers" class="careers">
+        <h2>Join Our Team</h2>
+        <p>We're always looking for talented individuals to join our innovative crew. Explore opportunities at TechNova Solutions.</p>
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="#contact" class="btn">View Open Positions</a>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <h2>Contact Us</h2>
+        <form>
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+            <input type="text" placeholder="Subject" required>
+            <textarea placeholder="Your Message" rows="6" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </section>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h3>TechNova Solutions</h3>
+                <p>123 Tech Street</p>
+                <p>Innovation City, TC 12345</p>
+            </div>
+            <div>
+                <h3>Contact Info</h3>
+                <p>Email: info@technova.com</p>
+                <p>Phone: (555) 123-4567</p>
+            </div>
+            <div>
+                <h3>Quick Links</h3>
+                <p><a href="#about" style="color: white; text-decoration: none;">About</a></p>
+                <p><a href="#services" style="color: white; text-decoration: none;">Services</a></p>
+                <p><a href="#careers" style="color: white; text-decoration: none;">Careers</a></p>
+            </div>
+            <div>
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="#">Twitter</a>
+                    <a href="#">LinkedIn</a>
+                    <a href="#">Facebook</a>
+                </div>
+            </div>
+        </div>
+        <p style="text-align: center; font-size: 0.9rem;">© 2025 TechNova Solutions. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Hamburger menu functionality
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Scroll animation for cards and headings
+        const cards = document.querySelectorAll('.card');
+        const headings = document.querySelectorAll('h2');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.3,
+            rootMargin: '0px 0px -50px 0px'
+        });
+
+        cards.forEach(card => observer.observe(card));
+        headings.forEach(heading => observer.observe(heading));
+    </script>
+</body>
+</html>
